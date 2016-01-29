@@ -83,11 +83,15 @@ torsoGeometry.applyMatrix(non_uniform_scale);
 // Hint: Explicity declare new matrices using Matrix4().set
 var limb_scale = new THREE.Matrix4().set(2,0,0,0, 0,5,0,0, 0,0,1,0, 0,0,0,1);
 var l_hand_geo = makeCube();
-var l_foot_geo = makeCube();
-var r_hand_geo = makeCube();
-var r_foot_geo = makeCube();  
+l_hand_geo.applyMatrix(limb_scale);  
 
-l_hand_geo.applyMatrix(limb_scale);   
+var tail_scale = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,8,0, 0,0,0,1);
+var tail_geo = makeCube();
+tail_geo.applyMatrix(tail_scale); 
+
+var head_scale = new THREE.Matrix4().set(3,0,0,0, 0,3,0,0, 0,0,6,0, 0,0,0,1);
+var head_geo = makeCube();
+head_geo.applyMatrix(head_scale);
 
 
 // MATRICES
@@ -99,7 +103,23 @@ var torsoMatrix = new THREE.Matrix4().set(1,0,0,0, 0,1,0,2.5, 0,0,1,0, 0,0,0,1);
 // Hint: Keep hierarchies in mind!   
 // Hint: Play around with the headTorsoMatrix values, what changes in the render? Why? 
 var l_hand_pos = new THREE.Matrix4().set(1,0,0,2.5, 0,1,0,-2, 0,0,1,3, 0,0,0,1);  
-l_hand_pos.multiply(torsoMatrix);      
+var l_hand_pos_abs = new THREE.Matrix4().multiplyMatrices(torsoMatrix,l_hand_pos); 
+
+var r_hand_pos = new THREE.Matrix4().set(1,0,0,-2.5, 0,1,0,-2, 0,0,1,3, 0,0,0,1);
+var r_hand_pos_abs = new THREE.Matrix4().multiplyMatrices(torsoMatrix,r_hand_pos);
+
+var l_foot_pos = new THREE.Matrix4().set(1,0,0,2.5, 0,1,0,-2, 0,0,1,-3, 0,0,0,1);
+var l_foot_pos_abs = new THREE.Matrix4().multiplyMatrices(torsoMatrix,l_foot_pos);
+
+
+var r_foot_pos = new THREE.Matrix4().set(1,0,0,-2.5, 0,1,0,-2, 0,0,1,-3, 0,0,0,1);
+var r_foot_pos_abs = new THREE.Matrix4().multiplyMatrices(torsoMatrix,r_foot_pos);  
+
+var tail_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,1,-8, 0,0,0,1);
+var tail_pos_abs = new THREE.Matrix4().multiplyMatrices(torsoMatrix,tail_pos);  
+
+var head_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,1,4, 0,0,0,1);
+var head_pos_abs = new THREE.Matrix4().multiplyMatrices(torsoMatrix,head_pos); 
 
 
 // CREATE BODY
@@ -111,9 +131,28 @@ scene.add(torso);
 // Hint: Hint: Add one piece of geometry at a time, then implement the motion for that part. 
 //             Then you can make sure your hierarchy still works properly after each step.
 var l_hand = new THREE.Mesh(l_hand_geo,normalMaterial);
-l_hand.setMatrix(l_hand_pos);
+l_hand.setMatrix(l_hand_pos_abs);
 scene.add(l_hand);
 
+var l_foot = new THREE.Mesh(l_hand_geo,normalMaterial);
+l_foot.setMatrix(l_foot_pos_abs);
+scene.add(l_foot);
+
+var r_hand = new THREE.Mesh(l_hand_geo,normalMaterial);
+r_hand.setMatrix(r_hand_pos_abs);
+scene.add(r_hand);
+
+var r_foot = new THREE.Mesh(l_hand_geo,normalMaterial);
+r_foot.setMatrix(r_foot_pos_abs);
+scene.add(r_foot);
+
+var tail = new THREE.Mesh(tail_geo,normalMaterial);
+tail.setMatrix(tail_pos_abs);
+scene.add(tail);
+
+var head = new THREE.Mesh(head_geo,normalMaterial);
+head.setMatrix(head_pos_abs);
+scene.add(head);
 
 // APPLY DIFFERENT JUMP CUTS/ANIMATIONS TO DIFFERNET KEYS
 // Note: The start of "U" animation has been done for you, you must implement the hiearchy and jumpcut.
@@ -171,7 +210,25 @@ function updateBody() {
                                             0,        0,         0,        1);
 
       var torsoRotMatrix = new THREE.Matrix4().multiplyMatrices(torsoMatrix,rotateZ);
-      torso.setMatrix(torsoRotMatrix); 
+      torso.setMatrix(torsoRotMatrix);
+
+      var l_hand_rot = new THREE.Matrix4().multiplyMatrices(torsoRotMatrix,l_hand_pos);
+      l_hand.setMatrix(l_hand_rot); 
+
+      var r_hand_rot = new THREE.Matrix4().multiplyMatrices(torsoRotMatrix,r_hand_pos);
+      r_hand.setMatrix(r_hand_rot); 
+      
+      var l_foot_rot = new THREE.Matrix4().multiplyMatrices(torsoRotMatrix,l_foot_pos);
+      l_foot.setMatrix(l_foot_rot); 
+      
+      var r_foot_rot = new THREE.Matrix4().multiplyMatrices(torsoRotMatrix,r_foot_pos);
+      r_foot.setMatrix(r_foot_rot); 
+
+      var tail_rot = new THREE.Matrix4().multiplyMatrices(torsoRotMatrix,tail_pos);
+      tail.setMatrix(tail_rot);
+
+      var head_rot = new THREE.Matrix4().multiplyMatrices(torsoRotMatrix,head_pos);
+      head.setMatrix(head_rot);
       break;
 
 
