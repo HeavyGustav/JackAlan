@@ -71,86 +71,88 @@ function makeCube() {
 
 // GEOMETRY
 var torsoGeometry = makeCube();
-var tailGeometry = makeCube();
-var headGeometry = makeCube();
-var limbGeometry = makeCube();
-var limbGeometry1 = makeCube();
-var limbGeometry2 = makeCube();
-var limbGeometry3 = makeCube();
-
+// var non_uniform_scale = new THREE.Matrix4().set(5,0,0,0, 0,5,0,0, 0,0,8,0, 0,0,0,1);
 var non_uniform_scale = new THREE.Matrix4().set(5,0,0,0, 0,5,0,0, 0,0,8,0, 0,0,0,1);
-//var non_uniform_scale_tail = new THREE.Matrix4().set(0.5,0,0,0, 0,0.5,0,0, 0,0,12,0, 0,0,0,1);
 torsoGeometry.applyMatrix(non_uniform_scale);
-//tailGeometry.applyMatrix(non_uniform_scale_tail);
 
 // TO-DO: SPECIFY THE REST OF YOUR STAR-NOSE MOLE'S GEOMETRY. 
 // Note: You will be using transformation matrices to set the shape. 
 // Note: You are not allowed to use the tools Three.js provides for 
 //       rotation, translation and scaling.
 // Note: The torso has been done for you (but feel free to modify it!)  
-// Hint: Explicity declare new matrices using Matrix4().set     
+// Hint: Explicity declare new matrices using Matrix4().set
+var limb_scale = new THREE.Matrix4().set(2,0,0,0, 0,5,0,0, 0,0,1,0, 0,0,0,1);
+var l_hand_geo = makeCube();
+l_hand_geo.applyMatrix(limb_scale);  
 
+var tail_scale = new THREE.Matrix4().set(0.5,0,0,0, 0,0.5,0,0, 0,0,8,0, 0,0,0,1);
+var tail_geo = makeCube();
+tail_geo.applyMatrix(tail_scale); 
+
+var head_scale = new THREE.Matrix4().set(3,0,0,0, 0,3,0,0, 0,0,6,0, 0,0,0,1);
+var head_geo = makeCube();
+head_geo.applyMatrix(head_scale);
 
 
 // MATRICES
-var torsoMatrix = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1);
-//var tailMatrix = new THREE.Matrix4().set(1,0,0,0, 0,1,0,2.5, 0,0,1,-7, 0,0,0,1);
-var scalMatrix_tail = new THREE.Matrix4().set(0.5,0,0,0, 0,0.5,0,0, 0,0,8,0, 0,0,0,1);
-var transMatrix_tail = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,1,-8, 0,0,0,1);
-var tailMatrix = new THREE.Matrix4().multiplyMatrices(transMatrix_tail,scalMatrix_tail);
+// var torsoMatrix = new THREE.Matrix4().set(1,0,0,0, 0,1,0,2.5, 0,0,1,0, 0,0,0,1);
+var torsoMatrix = new THREE.Matrix4().set(1,0,0,0, 0,1,0,2.5, 0,0,1,0, 0,0,0,1);
 
-var scalMatrix_head = new THREE.Matrix4().set(3,0,0,0, 0,3,0,0, 0,0,4,0, 0,0,0,1);
-var transMatrix_head = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,1,5, 0,0,0,1);
-var headMatrix = new THREE.Matrix4().multiplyMatrices(transMatrix_head,scalMatrix_head);
-
-var scalMatrix_limb = new THREE.Matrix4().set(1,0,0,0, 0,3,0,0, 0,0,2,0, 0,0,0,1);
-var transMatrix_limb = new THREE.Matrix4().set(1,0,0,3, 0,1,0,-3, 0,0,1,-3, 0,0,0,1);
-var limbMatrix = new THREE.Matrix4().multiplyMatrices(transMatrix_limb,scalMatrix_limb);
-
-var transMatrix_limb1 = new THREE.Matrix4().set(1,0,0,3, 0,1,0,-3, 0,0,1,3, 0,0,0,1);
-var limb1Matrix = new THREE.Matrix4().multiplyMatrices(transMatrix_limb1,scalMatrix_limb);
-
-var transMatrix_limb2 = new THREE.Matrix4().set(1,0,0,-3, 0,1,0,-3, 0,0,1,-3, 0,0,0,1);
-var limb2Matrix = new THREE.Matrix4().multiplyMatrices(transMatrix_limb2,scalMatrix_limb);
-
-var transMatrix_limb3 = new THREE.Matrix4().set(1,0,0,-3, 0,1,0,-3, 0,0,1,3, 0,0,0,1);
-var limb3Matrix = new THREE.Matrix4().multiplyMatrices(transMatrix_limb3,scalMatrix_limb);
 // TO-DO: INITIALIZE THE REST OF YOUR MATRICES 
 // Note: Use of parent attribute is not allowed.
 // Hint: Keep hierarchies in mind!   
-// Hint: Play around with the headTorsoMatrix values, what changes in the render? Why?         
+// Hint: Play around with the headTorsoMatrix values, what changes in the render? Why? 
+var l_hand_pos = new THREE.Matrix4().set(1,0,0,2.5, 0,1,0,-2, 0,0,1,3, 0,0,0,1);  
+var l_hand_pos_abs = new THREE.Matrix4().multiplyMatrices(torsoMatrix,l_hand_pos); 
 
+var r_hand_pos = new THREE.Matrix4().set(1,0,0,-2.5, 0,1,0,-2, 0,0,1,3, 0,0,0,1);
+var r_hand_pos_abs = new THREE.Matrix4().multiplyMatrices(torsoMatrix,r_hand_pos);
+
+var l_foot_pos = new THREE.Matrix4().set(1,0,0,2.5, 0,1,0,-2, 0,0,1,-3, 0,0,0,1);
+var l_foot_pos_abs = new THREE.Matrix4().multiplyMatrices(torsoMatrix,l_foot_pos);
+
+
+var r_foot_pos = new THREE.Matrix4().set(1,0,0,-2.5, 0,1,0,-2, 0,0,1,-3, 0,0,0,1);
+var r_foot_pos_abs = new THREE.Matrix4().multiplyMatrices(torsoMatrix,r_foot_pos);  
+
+var tail_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,1,-8, 0,0,0,1);
+var tail_pos_abs = new THREE.Matrix4().multiplyMatrices(torsoMatrix,tail_pos);  
+
+var head_pos = new THREE.Matrix4().set(1,0,0,0, 0,1,0,0, 0,0,1,4, 0,0,0,1);
+var head_pos_abs = new THREE.Matrix4().multiplyMatrices(torsoMatrix,head_pos); 
 
 
 // CREATE BODY
 var torso = new THREE.Mesh(torsoGeometry,normalMaterial);
-var tail = new THREE.Mesh(tailGeometry,normalMaterial);
-var head = new THREE.Mesh(headGeometry,normalMaterial);
-var limb = new THREE.Mesh(limbGeometry,normalMaterial);
-var limb1 = new THREE.Mesh(limbGeometry1,normalMaterial);
-var limb2 = new THREE.Mesh(limbGeometry2,normalMaterial);
-var limb3 = new THREE.Mesh(limbGeometry3,normalMaterial);
-torso.setMatrix(torsoMatrix);
-tail.setMatrix(tailMatrix);
-head.setMatrix(headMatrix);
-limb.setMatrix(limbMatrix);
-limb1.setMatrix(limb1Matrix);
-limb2.setMatrix(limb2Matrix);
-limb3.setMatrix(limb3Matrix);
-
+torso.setMatrix(torsoMatrix)
 scene.add(torso);
-scene.add(tail);
-scene.add(head);
-scene.add(limb);
-scene.add(limb1);
-scene.add(limb2);
-scene.add(limb3);
 
 // TO-DO: PUT TOGETHER THE REST OF YOUR STAR-NOSED MOLE AND ADD TO THE SCENE!
 // Hint: Hint: Add one piece of geometry at a time, then implement the motion for that part. 
 //             Then you can make sure your hierarchy still works properly after each step.
+var l_hand = new THREE.Mesh(l_hand_geo,normalMaterial);
+l_hand.setMatrix(l_hand_pos_abs);
+scene.add(l_hand);
 
+var l_foot = new THREE.Mesh(l_hand_geo,normalMaterial);
+l_foot.setMatrix(l_foot_pos_abs);
+scene.add(l_foot);
 
+var r_hand = new THREE.Mesh(l_hand_geo,normalMaterial);
+r_hand.setMatrix(r_hand_pos_abs);
+scene.add(r_hand);
+
+var r_foot = new THREE.Mesh(l_hand_geo,normalMaterial);
+r_foot.setMatrix(r_foot_pos_abs);
+scene.add(r_foot);
+
+var tail = new THREE.Mesh(tail_geo,normalMaterial);
+tail.setMatrix(tail_pos_abs);
+scene.add(tail);
+
+var head = new THREE.Mesh(head_geo,normalMaterial);
+head.setMatrix(head_pos_abs);
+scene.add(head);
 
 // APPLY DIFFERENT JUMP CUTS/ANIMATIONS TO DIFFERNET KEYS
 // Note: The start of "U" animation has been done for you, you must implement the hiearchy and jumpcut.
@@ -167,6 +169,7 @@ var time_start; // start time of animation
 var time_end; // end time of animation
 var p; // current frame
 var animate = false; // animate?
+var smooth = true;
 
 // function init_animation()
 // Initializes parameters and sets animate flag to true.
@@ -193,49 +196,47 @@ function updateBody() {
         break;
       }
 
-      p = (p1 - p0)*((time-time_start)/time_length) + p0; // current frame 
+      if (smooth){
+        p = (p1 - p0)*((time-time_start)/time_length) + p0; // current frame 
+      }
+      else{p = p1;
+      }
+      
+
 
       var rotateZ = new THREE.Matrix4().set(1,        0,         0,        0, 
                                             0, Math.cos(-p),-Math.sin(-p), 0, 
                                             0, Math.sin(-p), Math.cos(-p), 0,
                                             0,        0,         0,        1);
 
-
       var torsoRotMatrix = new THREE.Matrix4().multiplyMatrices(torsoMatrix,rotateZ);
-      var tailRotMatrix1 = new THREE.Matrix4().multiplyMatrices(tailMatrix,torsoMatrix);
-      var tailRotMatrix = new THREE.Matrix4().multiplyMatrices(rotateZ,tailRotMatrix1);
-      var headRotMatrix = new THREE.Matrix4().multiplyMatrices(torsoRotMatrix,headMatrix);
-      var limb3RotMatrix = new THREE.Matrix4().multiplyMatrices(torsoRotMatrix,limb3Matrix);
-      var limb1RotMatrix = new THREE.Matrix4().multiplyMatrices(torsoRotMatrix,limb1Matrix);
+      torso.setMatrix(torsoRotMatrix);
+
+      var l_hand_rot = new THREE.Matrix4().multiplyMatrices(torsoRotMatrix,l_hand_pos);
+      l_hand.setMatrix(l_hand_rot); 
+
+      var r_hand_rot = new THREE.Matrix4().multiplyMatrices(torsoRotMatrix,r_hand_pos);
+      r_hand.setMatrix(r_hand_rot); 
       
-      torso.setMatrix(torsoRotMatrix); 
-      tail.setMatrix(tailRotMatrix);
-      head.setMatrix(headRotMatrix);
-      limb3.setMatrix(limb3RotMatrix);
-      limb1.setMatrix(limb1RotMatrix);
-      break
+      var l_foot_rot = new THREE.Matrix4().multiplyMatrices(torsoRotMatrix,l_foot_pos);
+      l_foot.setMatrix(l_foot_rot); 
+      
+      var r_foot_rot = new THREE.Matrix4().multiplyMatrices(torsoRotMatrix,r_foot_pos);
+      r_foot.setMatrix(r_foot_rot); 
+
+      var tail_rot = new THREE.Matrix4().multiplyMatrices(torsoRotMatrix,tail_pos);
+      tail.setMatrix(tail_rot);
+
+      var head_rot = new THREE.Matrix4().multiplyMatrices(torsoRotMatrix,head_pos);
+      head.setMatrix(head_rot);
+      break;
+
+
 
       // TO-DO: IMPLEMENT JUMPCUT/ANIMATION FOR EACH KEY!
       // Note: Remember spacebar sets jumpcut/animate!
-      case(key == "P" && animate):
-      var time = clock.getElapsedTime(); // t seconds passed since the clock started.
 
-      if (time > time_end){
-        p = p1;
-        animate = false;
-        break;
-      }
-
-      p = (p1 - p0)*((time-time_start)/time_length) + p0; // current frame 
-      var rotateZ = new THREE.Matrix4().set(1,        0,         0,        0, 
-                                            0, Math.cos(-p),-Math.sin(-p), 0, 
-                                            0, Math.sin(-p), Math.cos(-p), 0,
-                                            0,        0,         0,        1);
-      var tailRotMatrix1 = new THREE.Matrix4().multiplyMatrices(tailMatrix,torsoMatrix);
-      var tailRotMatrix = new THREE.Matrix4().multiplyMatrices(rotateZ,tailRotMatrix1);
-
-      tail.setMatrix(tailRotMatrix);
-      break
+      
 
 
     default:
@@ -259,8 +260,9 @@ keyboard.domElement.addEventListener('keydown',function(event){
     camera.lookAt(scene.position);}
   else if(keyboard.eventMatches(event,"U")){ 
     (key == "U")? init_animation(p1,p0,time_length) : (init_animation(0,Math.PI/4,1), key = "U")}
-  else if(keyboard.eventMatches(event,"P")){ 
-    (key == "P")? init_animation(p1,p0,time_length) : (init_animation(0,Math.PI/4,1), key = "P")}  
+  else if(keyboard.eventMatches(event," ")){
+     smooth = !smooth;
+  }
 
 
   // TO-DO: BIND KEYS TO YOUR JUMP CUTS AND ANIMATIONS
